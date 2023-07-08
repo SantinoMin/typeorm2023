@@ -15,7 +15,7 @@ function ormConfig(): TypeOrmModuleOptions {
     host: 'localhost',
     port: Number(3306),
     username: 'root',
-    password: 'root',
+    password: 'Tjrtkdals2@',
     logging: true,
     synchronize: commonConf.SYNCRONIZE,
     entities: commonConf.ENTITIES,

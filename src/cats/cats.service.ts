@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Cat } from 'src/domain/cat.entity';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class CatsService {
-  create(createCatDto: CreateCatDto) {
-    return 'This action adds a new cat';
+  constructor(
+    @InjectRepository(Cat)
+    private catRepository: Repository<Cat>,
+    private dataSource: DataSource,
+  ) {}
+
+  async create(createCatDto: CreateCatDto) {
+    return await this.catRepository.save(createCatDto);
   }
 
-  findAll() {
-    return `This action returns all cats`;
+  async findAll() {
+    return await this.catRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cat`;
+  async findOne(id: number) {
+    return await this.catRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateCatDto: UpdateCatDto) {
-    return `This action updates a #${id} cat`;
+  async update(id: number, updateCatDto: UpdateCatDto) {
+    const cat = await this.catRepository.findOne({ where: { id } });
+    if (!cat) {
+      throw new Error('cat not found!');
+    }
+    Object.assign(cat, updateCatDto);
+    return await this.catRepository.save(cat);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cat`;
+  async remove(id: number) {
+    const allCats = this.catRepository.find({ where: { id } });
+    const cat = await this.catRepository.findOne({ where: { id } });
+    if (!cat) {
+      throw new Error('cat not found!');
+    }
+    return this.catRepository.remove(cat);
   }
 }
