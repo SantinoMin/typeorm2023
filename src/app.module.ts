@@ -1,3 +1,4 @@
+import { UserRepository } from './auth/user.repository';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -10,17 +11,17 @@ import { Cat } from './domain/cat.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({ useFactory: ormConfig }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'Tjrtkdals2@',
-      database: 'typeorm_2023',
-      entities: [User, Cat],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRootAsync({ UserRepository }),
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   username: 'root',
+    //   password: 'Tjrtkdals2@',
+    //   database: 'typeorm_2023',
+    //   entities: [User, Cat],
+    //   synchronize: true,
+    // }),
     CatsModule,
     AuthModule,
   ],
